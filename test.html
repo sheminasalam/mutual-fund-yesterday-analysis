@@ -1,1 +1,131 @@
-lockup is done
+<table border="1">
+    <thead>
+        <tr>
+            <th colspan="12">MUTUAL FUND ANALYSIS OF </th>
+        </tr>
+        <tr>
+            <th>Fund Name</th>
+            <th>SIP Amount</th>
+            <th>SIP Date</th>
+            <th>Day Change</th>
+            <th>Day Change %</th>
+            <th>Month Change</th>
+            <th>Month Change %</th>
+            <th>Total Value</th>
+            <th>Year Returns</th>
+            <th>Invested</th>
+            <th>Total Profit</th>
+            <th>Total Profit %</th>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+        <tr>
+            <td>Motilal Oswal Nasdaq 100</td>
+            <td class="center">2500</td>
+            <td class="center">24</td>
+            <td class="numeric">560</td>
+            <td class="numeric">0.64</td>
+            <td class="numeric">-359</td>
+            <td class="numeric">-0.4</td>
+            <td class="numeric">88814</td>
+            <td class="numeric">4330</td>
+            <td class="center">69999</td>
+            <td class="numeric">18815</td>
+            <td class="numeric">26.9</td>
+        </tr>
+        <!-- Remaining table rows go here -->
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var tableBody = document.getElementById('tableBody');
+        var rows = tableBody.querySelectorAll('tr');
+        var totals = {
+            'DayChange': 0,
+            'MonthChange': 0,
+            'Invested': 0,
+            'TotalValue': 0,
+            'TotalProfit': 0,
+            'YearReturns': 0
+        };
+
+        rows.forEach(function(row, index) {
+            var cells = row.querySelectorAll('td');
+            cells.forEach(function(cell, index) {
+                if (index !== 1 && index !== 2 && index !== 9) {
+                    var cellValue = parseFloat(cell.textContent);
+                    if (!isNaN(cellValue)) {
+                        if (cellValue < 0) {
+                            cell.classList.add('negative');
+                        } else if (cellValue > 0) {
+                            cell.classList.add('positive');
+                        }
+                    }
+                }
+            });
+
+            if (index < rows.length - 1) { // Skip totals row for calculations
+                totals.DayChange += parseFloat(cells[3].textContent);
+                totals.MonthChange += parseFloat(cells[5].textContent);
+                totals.Invested += parseFloat(cells[9].textContent);
+                totals.TotalValue += parseFloat(cells[7].textContent);
+                totals.TotalProfit += parseFloat(cells[10].textContent);
+                totals.YearReturns += parseFloat(cells[8].textContent);
+            }
+        });
+
+        // Insert yesterday's date in the table header
+        var yesterdayDate = new Date();
+        yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+        var formattedDate = yesterdayDate.toLocaleDateString('en-GB');
+        document.querySelector('th[colspan="12"]').textContent = 'MUTUAL FUND ANALYSIS OF ' + formattedDate;
+
+        // Insert totals into the totals row
+        document.getElementById('dayChangeTotal').textContent = totals.DayChange.toFixed(2);
+        document.getElementById('monthChangeTotal').textContent = totals.MonthChange.toFixed(2);
+        document.getElementById('totalValueTotal').textContent = totals.TotalValue.toFixed(2);
+        document.getElementById('yearReturnsTotal').textContent = totals.YearReturns.toFixed(2);
+        document.getElementById('investedTotal').textContent = totals.Invested.toFixed(2);
+        document.getElementById('totalProfitTotal').textContent = totals.TotalProfit.toFixed(2);
+
+        // Apply color highlighting to the totals row
+        var totalCells = document.getElementById('totalsRow').querySelectorAll('td');
+        totalCells.forEach(function(cell, index) {
+            if (index !== 1 && index !== 2 && index !== 9) {
+                var cellValue = parseFloat(cell.textContent);
+                if (!isNaN(cellValue)) {
+                    if (cellValue < 0) {
+                        cell.classList.add('negative');
+                    } else if (cellValue > 0) {
+                        cell.classList.add('positive');
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+<style>
+    /* Define CSS for negative values */
+    td.negative {
+        background-color: #DC143C;
+        color: white;
+    }
+
+    /* Define CSS for positive values */
+    td.positive {
+        background-color: #096B00;
+        color: white;
+    }
+
+    /* Define CSS for numeric cells */
+    .numeric {
+        text-align: center;
+    }
+
+    /* Define CSS for center-aligned cells */
+    .center {
+        text-align: center;
+    }
+</style>
